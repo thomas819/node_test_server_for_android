@@ -1,17 +1,10 @@
 const express = require('express');
 const route = express.Router();
-const user = require('../controller/user')
 const auth = require('../auth/auth')
-const android = require('../controller/android')
+const android = require('../controller/user')
+
 
 route.route('/user')
-    .post(user.createUser)
-    .get(auth.isBasicAuthenticated, user.readUser)
-    .put(auth.isBasicAuthenticated, user.updateUser)
-    .delete(auth.isBasicAuthenticated, user.deleteUser)
-
-
-route.route('/android')
     .post(android.createData)
     .get(auth.isBasicAuthenticated,android.readData)
     .put(auth.isBasicAuthenticated,android.updateData)

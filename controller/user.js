@@ -1,70 +1,49 @@
-const User = require('../models/user')
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken')
 let jwtKey = "20170503"
 
+const mysql = require('mysql');
+const dbconfig = require('../config/database')
+const  connection =mysql.createConnection(dbconfig)
 
-exports.createUser = function (req, res) {
+exports.createData = function (req, res) {
 
-    let userName = req.body.userName;
     let password = req.body.password;
-
 
     const hash = crypto.createHash('sha256')
     hash.update(password)
     let hash_password = hash.digest('hex');
 
-    // let key = "sdsds"
-    //
-    //
-    // const ciper = crypto.createCipher('aes192',key);
-    // const deciper = crypto.createDecipher('aes192',key);
-    // let encrypted_passowrd = ciper.update(password,'utf8','hex');
-    // encrypted_passowrd += ciper.final('hex')
 
+    let data ={'name':req.body.name,
+        'id':req.body.id,
+        'password':hash_password}
 
-    new User({userName: userName, password: hash_password}).save((err, doc) =>{
+    let quary = connection.query('insert into member set ?',data,function (err, rows) {
+        if(err) throw err;
 
-        if(doc) //데이터가 정확이 들어갔는지 체크 코드
-        {
-            console.log(doc)
-
-
-
-            // let target = doc.password;
-            //
-            // let decryped = deciper.update(target, 'hex','utf8')
-            // decryped += deciper.final('utf8');
-            //
-            // console.log("복호화된 패스워드" + decryped);
-
-
-
-            res.send("유저가 생성되었습니다.")
+        if(rows){
+            console.log("가입성공")
         }
-    })
 
+        res.send('success')
 
+    });
 
 }
 
-exports.readUser = function (req, res) {
-
-    console.log("controller user read:",req.user)
-
-    let token = jwt.sign(req.user,jwtKey);
-
+exports.readData = function (req, res) {
+    console.log("user:",req.user)
+    let token = jwt.sign({id : req.user.id, password : req.user.password},jwtKey);
     res.send(token)
-
 }
 
-exports.updateUser = function (req, res) {
+exports.updateData = function (req, res) {
     //수정되는 코드
     res.send("유저가 수정되었습니다.")
 }
 
-exports.deleteUser = function (req, res) {
-
+exports.deleteData = function (req, res) {
     //삭제 코드
     res.send("유저가 삭제되었습니다.")
 }
