@@ -6,7 +6,7 @@ const mysql = require('mysql');
 const dbconfig = require('../config/database')
 const  connection =mysql.createConnection(dbconfig)
 
-exports.createData = function (req, res) {
+exports.createUser= function (req, res) {
 
     let password = req.body.password;
 
@@ -32,18 +32,18 @@ exports.createData = function (req, res) {
 
 }
 
-exports.readData = function (req, res) {
+exports.readUser = function (req, res) {
     console.log("user:",req.user)
     let token = jwt.sign({id : req.user.id, password : req.user.password},jwtKey);
     res.send(token)
 }
 
-exports.updateData = function (req, res) {
+exports.updateUser = function (req, res) {
     //수정되는 코드
     res.send("유저가 수정되었습니다.")
 }
 
-exports.deleteData = function (req, res) {
+exports.deleteUser = function (req, res) {
     //삭제 코드
     res.send("유저가 삭제되었습니다.")
 }
